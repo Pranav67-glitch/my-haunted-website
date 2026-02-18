@@ -4,11 +4,18 @@
   <title>Don't Leave Me</title>
   <style>
     body {
+      margin: 0;
       background: black;
       color: white;
-      text-align: center;
       font-family: Arial, sans-serif;
-      padding-top: 100px;
+      text-align: center;
+      padding-top: 15%;
+      overflow-x: hidden;
+      transition: background 0.5s, color 0.5s;
+    }
+
+    h1 {
+      font-size: 40px;
       transition: 0.3s;
     }
 
@@ -17,6 +24,9 @@
       font-size: 18px;
       margin-top: 20px;
       cursor: pointer;
+      background: crimson;
+      border: none;
+      color: white;
     }
 
     @keyframes shake {
@@ -28,7 +38,16 @@
     }
 
     .shake {
-      animation: shake 0.2s infinite;
+      animation: shake 0.15s infinite;
+    }
+
+    .red {
+      background: darkred !important;
+    }
+
+    .whiteFlash {
+      background: white !important;
+      color: black !important;
     }
   </style>
 </head>
@@ -39,28 +58,54 @@
   <button onclick="beg()">Leave Anyway</button>
 
   <script>
-    const messages = [
+    const message = document.getElementById("message");
+
+    const stages = [
       "Wait… don’t leave.",
       "I thought we had something special.",
       "Was it something I said?",
       "I can change.",
       "Please…",
-      "You can’t escape me."
+      "Why are you doing this?",
+      "You think you can escape?",
+      "I live in your browser now.",
+      "You can't close me.",
+      "FINE. TRY."
     ];
 
     let counter = 0;
 
     function beg() {
-      document.getElementById("message").innerText =
-        messages[counter % messages.length];
+      message.innerText = stages[counter % stages.length];
       counter++;
-      document.body.classList.add("shake");
+
+      if(counter > 3){
+        document.body.classList.add("shake");
+      }
+
+      if(counter > 6){
+        document.body.classList.add("red");
+      }
+
+      if(counter > 8){
+        meltdown();
+      }
     }
 
+    function meltdown(){
+      message.innerText = "SYSTEM ERROR. YOU BELONG HERE.";
+      document.body.classList.add("whiteFlash");
+      setTimeout(() => {
+        document.body.classList.remove("whiteFlash");
+      }, 200);
+    }
+
+    // Prevent leaving
     window.onbeforeunload = function () {
       return "Wait... are you sure you want to leave?";
     };
 
+    // Change tab title when they switch tabs
     document.addEventListener("visibilitychange", () => {
       if (document.hidden) {
         document.title = "Come back...";
@@ -68,7 +113,31 @@
         document.title = "I knew you would.";
       }
     });
+
+    // Memory of returning visitor
+    if(localStorage.getItem("visited")){
+      message.innerText = "You came back... I knew you would.";
+    } else {
+      localStorage.setItem("visited", "yes");
+    }
+
+    // Escalate over time
+    setTimeout(() => {
+      message.innerText = "You've been here for a while...";
+    }, 30000);
+
+    setTimeout(() => {
+      message.innerText = "You’re not leaving, are you?";
+      document.body.classList.add("shake");
+    }, 60000);
+
+    // Scroll lock chaos
+    window.addEventListener("scroll", () => {
+      window.scrollTo(0, 0);
+    });
+
   </script>
 
 </body>
 </html>
+
