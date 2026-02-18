@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Don't Leave Me</title>
+  <style>
+    body {
+      background: black;
+      color: white;
+      text-align: center;
+      font-family: Arial, sans-serif;
+      padding-top: 100px;
+      transition: 0.3s;
+    }
+
+    button {
+      padding: 15px 30px;
+      font-size: 18px;
+      margin-top: 20px;
+      cursor: pointer;
+    }
+
+    @keyframes shake {
+      0% { transform: translate(0px); }
+      25% { transform: translate(5px); }
+      50% { transform: translate(-5px); }
+      75% { transform: translate(5px); }
+      100% { transform: translate(0px); }
+    }
+
+    .shake {
+      animation: shake 0.2s infinite;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1 id="message">Please don't go...</h1>
+  <button onclick="beg()">Leave Anyway</button>
+
+  <script>
+    const messages = [
+      "Wait… don’t leave.",
+      "I thought we had something special.",
+      "Was it something I said?",
+      "I can change.",
+      "Please…",
+      "You can’t escape me."
+    ];
+
+    let counter = 0;
+
+    function beg() {
+      document.getElementById("message").innerText =
+        messages[counter % messages.length];
+      counter++;
+      document.body.classList.add("shake");
+    }
+
+    window.onbeforeunload = function () {
+      return "Wait... are you sure you want to leave?";
+    };
+
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) {
+        document.title = "Come back...";
+      } else {
+        document.title = "I knew you would.";
+      }
+    });
+  </script>
+
+</body>
+</html>
